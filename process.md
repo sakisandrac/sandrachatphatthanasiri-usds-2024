@@ -1,7 +1,9 @@
 # How to solve this problem
 - Input: a string, and a JSON object
 - Output: a modified JSON object with just the items that include the search term
-- Things to consider: The object might be empty, or contain items with no content
+- Things to consider: 
+    - The object might be empty, or contain items with no content
+    - The text might contain capital letters (maybe I should lowercase everything?)
 
 - Loop through the array of objects, and check if the search string is included the "text" value. if it is, return the page and line, and the ISBN of the book
 - Add the matched book into the results array of the output object
@@ -11,3 +13,11 @@
 - A reduce might also work so that an array is returned that I can use as the results array
 
 - I am going to try to use reduce, and not worry about books with no scanned content yet, and get that to work first, then go from there to test out edge cases to see how my solution will have to differ.
+- Remember to JSONify the output 
+
+## Potential Methods I could use:
+- Reduce
+- forEach
+- includes()
+- toLowerCase()
+- push()
