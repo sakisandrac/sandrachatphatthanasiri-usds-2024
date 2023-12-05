@@ -23,7 +23,7 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
     const results = scannedTextObj.reduce((acc, book) => {
         book.Content.forEach(item => {
             const words = item.Text.split(" ");
-    console.log(words)
+            
             if (words.includes(searchTerm)) {
                 let text = {
                     ISBN: book.ISBN,
@@ -123,15 +123,14 @@ if(!test3result.Results.length) {
 } else {
     console.log("FAIL: Test 3");
     console.log("Expected:", twentyLeaguesOut.Results.length);
-    console.log("Received:", test2result.Results.length);
+    console.log("Received:", test3result.Results.length);
 }
 
 const test4result = findSearchTermInBooks("th", twentyLeaguesIn);
-console.log(test4result)
-// if(!test4result.Results.length) {
-//     console.log("PASS: Test 3");
-// } else {
-//     console.log("FAIL: Test 3");
-//     console.log("Expected:", twentyLeaguesOut.Results.length);
-//     console.log("Received:", test2result.Results.length);
-// }
+if(!test4result.Results.length) {
+    console.log("PASS: Test 4");
+} else {
+    console.log("FAIL: Test 4");
+    console.log("Expected:", twentyLeaguesOut.Results.length);
+    console.log("Received:", test4result.Results.length);
+}
