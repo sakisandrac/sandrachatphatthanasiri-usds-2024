@@ -21,16 +21,18 @@
 function findSearchTermInBooks(searchTerm, scannedTextObj) {
 
     const results = scannedTextObj.reduce((acc, book) => {
-      book.Content.forEach(item => {
-    if(item.Text.includes(searchTerm)) {
-      let text = {}
-      text.ISBN = book.ISBN;
-      text.Page = item.Page;
-      text.Line = item.Line;
-  
-      acc.push(text);
-    }
-      })
+        book.Content.forEach(item => {
+            const words = item.Text.split(" ");
+    console.log(words)
+            if (words.includes(searchTerm)) {
+                let text = {
+                    ISBN: book.ISBN,
+                    Page: item.Page,
+                    Line: item.Line
+                };
+                acc.push(text);
+            }
+        });
       return acc;
     }, []);
     
@@ -123,3 +125,13 @@ if(!test3result.Results.length) {
     console.log("Expected:", twentyLeaguesOut.Results.length);
     console.log("Received:", test2result.Results.length);
 }
+
+const test4result = findSearchTermInBooks("th", twentyLeaguesIn);
+console.log(test4result)
+// if(!test4result.Results.length) {
+//     console.log("PASS: Test 3");
+// } else {
+//     console.log("FAIL: Test 3");
+//     console.log("Expected:", twentyLeaguesOut.Results.length);
+//     console.log("Received:", test2result.Results.length);
+// }
