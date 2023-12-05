@@ -22,17 +22,17 @@ function findSearchTermInBooks(searchTerm, scannedTextObj) {
 
     const results = scannedTextObj.reduce((acc, book) => {
       book.Content.forEach(item => {
-    if(item.Text.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if(item.Text.includes(searchTerm)) {
       let text = {}
-      text.ISBN = book.ISBN
-      text.Page = item.Page
-      text.Line = item.Line
+      text.ISBN = book.ISBN;
+      text.Page = item.Page;
+      text.Line = item.Line;
   
-      acc.push(text)
+      acc.push(text);
     }
       })
-      return acc
-    }, [])
+      return acc;
+    }, []);
     
       var result = {
           "SearchTerm": searchTerm,
@@ -111,6 +111,15 @@ if (test2result.Results.length == 1) {
     console.log("PASS: Test 2");
 } else {
     console.log("FAIL: Test 2");
+    console.log("Expected:", twentyLeaguesOut.Results.length);
+    console.log("Received:", test2result.Results.length);
+}
+
+const test3result = findSearchTermInBooks("apples", twentyLeaguesIn);
+if(!test3result.Results.length) {
+    console.log("PASS: Test 3");
+} else {
+    console.log("FAIL: Test 3");
     console.log("Expected:", twentyLeaguesOut.Results.length);
     console.log("Received:", test2result.Results.length);
 }
