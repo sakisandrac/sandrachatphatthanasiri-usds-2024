@@ -17,32 +17,82 @@
  * @param {string} searchTerm - The word or term we're searching for. 
  * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
  * @returns {JSON} - Search results.
- * */ 
+ * */
+// function findSearchTermInBooks(searchTerm, scannedTextObj) {
+
+//     const results = scannedTextObj.reduce((acc, book) => {
+//         book.Content.forEach(item => {
+//             const words = item.Text.split(" ").filter(word => word !== "");
+
+//             if (words.includes(searchTerm)) {
+//                 let text = {
+//                     ISBN: book.ISBN,
+//                     Page: item.Page,
+//                     Line: item.Line
+//                 };
+//                 acc.push(text);
+//             }
+//         });
+//       return acc;
+//     }, []);
+
+//       var result = {
+//           "SearchTerm": searchTerm,
+//           "Results": results
+//       };
+
+//       return result; 
+//   }
+
+const pushFoundResult = (acc, book, i) => {
+
+    let text = {
+        ISBN: book.ISBN,
+        Page: book.Content[i].Page,
+        Line: book.Content[i].Line
+    };
+
+    acc.push(text);
+}
+
+const checkForHyphens = (searchTerm, words, book, i) => {
+    if (words[words.length - 1].includes('-') && book.Content[i + 1]) {
+    
+        const nextBookWords = book.Content[i + 1].Text.split(" ").filter(word => word !== "");
+        
+        if (`${words[words.length - 1]}${nextBookWords[0]}`.split('-').join('') === searchTerm) {
+            pushFoundResult(acc, book, i);
+        }
+    }
+}
+
+
 function findSearchTermInBooks(searchTerm, scannedTextObj) {
 
     const results = scannedTextObj.reduce((acc, book) => {
-        book.Content.forEach(item => {
-            const words = item.Text.split(" ");
-            
+
+        for (let i = 0; i < book.Content.length; i++) {
+
+            const words = book.Content[i].Text.split(" ").filter(word => word !== "");
+
+            checkForHyphens(searchTerm, words, book, i);
+
             if (words.includes(searchTerm)) {
-                let text = {
-                    ISBN: book.ISBN,
-                    Page: item.Page,
-                    Line: item.Line
-                };
-                acc.push(text);
+                pushFoundResult(acc, book, i);
             }
-        });
-      return acc;
-    }, []);
-    
-      var result = {
-          "SearchTerm": searchTerm,
-          "Results": results
-      };
-  
-      return result; 
-  }
+        }
+
+        return acc;
+    }, [])
+
+    var result = {
+        "SearchTerm": searchTerm,
+        "Results": results
+    };
+
+    return result;
+}
+
 
 /** Example input object. */
 const twentyLeaguesIn = [
@@ -64,11 +114,11 @@ const twentyLeaguesIn = [
                 "Page": 31,
                 "Line": 10,
                 "Text": "eyes were, I asked myself how he had managed to see, and"
-            } 
-        ] 
+            }
+        ]
     }
 ]
-    
+
 /** Example output object */
 const twentyLeaguesOut = {
     "SearchTerm": "the",
@@ -79,6 +129,21 @@ const twentyLeaguesOut = {
             "Line": 9
         }
     ]
+}
+
+const test3output = {
+    "SearchTerm": "apples",
+    "Results": []
+}
+
+const test4output = {
+    "SearchTerm": "th",
+    "Results": []
+}
+
+const test5output = {
+    "SearchTerm": "",
+    "Results": []
 }
 
 /*
@@ -108,7 +173,7 @@ if (JSON.stringify(twentyLeaguesOut) === JSON.stringify(test1result)) {
 }
 
 /** We could choose to check that we get the right number of results. */
-const test2result = findSearchTermInBooks("the", twentyLeaguesIn); 
+const test2result = findSearchTermInBooks("the", twentyLeaguesIn);
 if (test2result.Results.length == 1) {
     console.log("PASS: Test 2");
 } else {
@@ -117,20 +182,33 @@ if (test2result.Results.length == 1) {
     console.log("Received:", test2result.Results.length);
 }
 
+/** Check if the search term does not exist in books that an empty array is returned */
 const test3result = findSearchTermInBooks("apples", twentyLeaguesIn);
-if(!test3result.Results.length) {
+if (!test3result.Results.length) {
     console.log("PASS: Test 3");
 } else {
     console.log("FAIL: Test 3");
-    console.log("Expected:", twentyLeaguesOut.Results.length);
-    console.log("Received:", test3result.Results.length);
+    console.log("Expected:", test3output);
+    console.log("Received:", test3result);
 }
 
+/** Check to see if partial words will return matches (it should not as we want only exact matches) */
 const test4result = findSearchTermInBooks("th", twentyLeaguesIn);
-if(!test4result.Results.length) {
+if (!test4result.Results.length) {
     console.log("PASS: Test 4");
 } else {
     console.log("FAIL: Test 4");
-    console.log("Expected:", twentyLeaguesOut.Results.length);
-    console.log("Received:", test4result.Results.length);
+    console.log("Expected:", test4output);
+    console.log("Received:", test4result);
+}
+
+/** Check to see that empty strings will also return no results*/
+
+const test5result = findSearchTermInBooks("", twentyLeaguesIn);
+if (!test5result.Results.length) {
+    console.log("PASS: Test 5");
+} else {
+    console.log("FAIL: Test 5");
+    console.log("Expected:", 0);
+    console.log("Received:", test5result.Results.length);
 }
