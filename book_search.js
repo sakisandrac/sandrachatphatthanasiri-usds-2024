@@ -18,31 +18,6 @@
  * @param {JSON} scannedTextObj - A JSON object representing the scanned text.
  * @returns {JSON} - Search results.
  * */
-// function findSearchTermInBooks(searchTerm, scannedTextObj) {
-
-//     const results = scannedTextObj.reduce((acc, book) => {
-//         book.Content.forEach(item => {
-//             const words = item.Text.split(" ").filter(word => word !== "");
-
-//             if (words.includes(searchTerm)) {
-//                 let text = {
-//                     ISBN: book.ISBN,
-//                     Page: item.Page,
-//                     Line: item.Line
-//                 };
-//                 acc.push(text);
-//             }
-//         });
-//       return acc;
-//     }, []);
-
-//       var result = {
-//           "SearchTerm": searchTerm,
-//           "Results": results
-//       };
-
-//       return result; 
-//   }
 
 const createTextObject = (book, i) => ({
   ISBN: book.ISBN,
@@ -224,3 +199,26 @@ if (test6result.Results.length == 1) {
     console.log("Expected:", test6output);
     console.log("Received:", test6result);
 }
+
+/** Check to see that words with an apostrophe in search term and in scanned content are still found*/
+
+const test7output = {
+    "SearchTerm": "Canadian's",
+    "Results": [
+        { 
+            "ISBN": "9780000528531", 
+            "Page": 31, 
+            "Line": 9 
+        }
+    ]
+}
+
+const test7result = findSearchTermInBooks("Canadian's", twentyLeaguesIn);
+if (test7result.Results.length == 1) {
+    console.log("PASS: Test 7");
+} else {
+    console.log("FAIL: Test 7");
+    console.log("Expected:", test7output);
+    console.log("Received:", test7result);
+}
+
