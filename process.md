@@ -30,10 +30,12 @@
 - After refactoring and splitting the words, if I type an empty string as the search term it will give me results where a space or empty string was seen in the content. I need to refactor so that empty strings are not a match. I could put a conditional in there to check for word.length to make sure all the words in the text content are actual words, and not empty strings.
 - "darkness" does not return any thing right now because it is split into two lines (8,9)
     - in order to do this, i had to change the forEach into a for loop so that I can use the index of the next sentance, to see if when combining the last word of the hyphened word, if it would equal the search term.
-- "Candian's" does not match Canadian\'s in the text, should add a check for apostophe's 
+    - also have to check if the next line exists, other wise there will be an error when trying to grab the next word and compare.
+- "Candian's" does not match Canadian\'s in the text, should add a check for apostophe's - nevermind its fine
 
 ## Tests:
 - Test for if the word searched does not exist, make sure the results array is empty
 - Test for if a word is capitalized- based on the first test provided is should be case sensitive 
 - Test for if there is a partial word match (for example, if search word is "th", results should not return "the")
 - Test to see what happends when an empty string is used in the search term (result should be empty)
+
